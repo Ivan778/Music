@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="W0p-yr-z67">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Browser-->
+        <scene sceneID="Kfg-vT-BkJ">
+            <objects>
+                <viewController id="IJF-NZ-auS" customClass="BrowserViewController" customModule="Music" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NGC-Oo-PPi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tof-Bi-VMv">
+                                <rect key="frame" x="0.0" y="76" width="375" height="542"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="eIU-bG-jqZ">
+                                <rect key="frame" x="0.0" y="20" width="375" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="TdW-Ja-WCa">
+                                <rect key="frame" x="0.0" y="76" width="375" height="2"/>
+                            </progressView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="TdW-Ja-WCa" firstAttribute="top" secondItem="eIU-bG-jqZ" secondAttribute="bottom" id="41l-BS-maI"/>
+                            <constraint firstItem="Tof-Bi-VMv" firstAttribute="top" secondItem="eIU-bG-jqZ" secondAttribute="bottom" id="6xo-Rn-WBf"/>
+                            <constraint firstItem="eIU-bG-jqZ" firstAttribute="leading" secondItem="0mc-Ig-uLr" secondAttribute="leading" id="ABS-LU-RTA"/>
+                            <constraint firstItem="eIU-bG-jqZ" firstAttribute="trailing" secondItem="0mc-Ig-uLr" secondAttribute="trailing" id="Eig-Wr-vgv"/>
+                            <constraint firstItem="eIU-bG-jqZ" firstAttribute="top" secondItem="0mc-Ig-uLr" secondAttribute="top" id="Iix-0z-ysK"/>
+                            <constraint firstItem="Tof-Bi-VMv" firstAttribute="trailing" secondItem="0mc-Ig-uLr" secondAttribute="trailing" id="Qcl-bc-g9P"/>
+                            <constraint firstItem="TdW-Ja-WCa" firstAttribute="leading" secondItem="NGC-Oo-PPi" secondAttribute="leading" id="SAc-Te-pUI"/>
+                            <constraint firstAttribute="trailing" secondItem="TdW-Ja-WCa" secondAttribute="trailing" id="XPc-tb-Ue7"/>
+                            <constraint firstItem="Tof-Bi-VMv" firstAttribute="leading" secondItem="0mc-Ig-uLr" secondAttribute="leading" id="dXl-3f-6jN"/>
+                            <constraint firstItem="Tof-Bi-VMv" firstAttribute="bottom" secondItem="0mc-Ig-uLr" secondAttribute="bottom" id="i0X-Xa-M9T"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="0mc-Ig-uLr"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Browser" id="DRx-gH-8h8"/>
+                    <connections>
+                        <outlet property="progressView" destination="TdW-Ja-WCa" id="sVx-vk-YvV"/>
+                        <outlet property="searchBar" destination="eIU-bG-jqZ" id="7Si-1b-hc3"/>
+                        <outlet property="webView" destination="Tof-Bi-VMv" id="q35-9I-5Xs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IYd-yw-PY9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="941.60000000000002" y="512.29385307346331"/>
+        </scene>
+        <!--Music-->
+        <scene sceneID="WNe-hl-fXa">
+            <objects>
+                <viewController id="f4o-Ei-M0t" customClass="MusicViewController" customModule="Music" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rjp-q5-vjD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TqK-10-pXW">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="51" id="MxC-He-dpJ">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="51"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MxC-He-dpJ" id="XMA-iA-i8Q">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="50.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHG-i8-8iC">
+                                                    <rect key="frame" x="15" y="11" width="345" height="29"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="KHG-i8-8iC" firstAttribute="top" secondItem="XMA-iA-i8Q" secondAttribute="topMargin" id="GPy-Qz-BTS"/>
+                                                <constraint firstItem="KHG-i8-8iC" firstAttribute="bottom" secondItem="XMA-iA-i8Q" secondAttribute="bottomMargin" id="Imk-DZ-8jU"/>
+                                                <constraint firstItem="KHG-i8-8iC" firstAttribute="leading" secondItem="XMA-iA-i8Q" secondAttribute="leadingMargin" id="NQi-O6-Aku"/>
+                                                <constraint firstItem="KHG-i8-8iC" firstAttribute="trailing" secondItem="XMA-iA-i8Q" secondAttribute="trailingMargin" id="Z8g-ha-Oh1"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="TqK-10-pXW" firstAttribute="top" secondItem="RNE-ZK-H5p" secondAttribute="top" id="OvZ-58-n03"/>
+                            <constraint firstItem="TqK-10-pXW" firstAttribute="trailing" secondItem="RNE-ZK-H5p" secondAttribute="trailing" id="RXD-KQ-TYA"/>
+                            <constraint firstItem="TqK-10-pXW" firstAttribute="bottom" secondItem="RNE-ZK-H5p" secondAttribute="bottom" id="Z8f-KF-5QR"/>
+                            <constraint firstItem="TqK-10-pXW" firstAttribute="leading" secondItem="RNE-ZK-H5p" secondAttribute="leading" id="tpf-Dp-uAs"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="RNE-ZK-H5p"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Music" id="TOf-Bs-1ru"/>
+                    <connections>
+                        <outlet property="tableView" destination="TqK-10-pXW" id="oyG-fP-op5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hV7-I7-xig" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1912.8" y="-153.37331334332833"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="wXt-fs-0TS">
+            <objects>
+                <tabBarController id="W0p-yr-z67" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="h1G-0L-C9v">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="SJ2-pS-RxL" kind="relationship" relationship="viewControllers" id="F9m-k4-OGe"/>
+                        <segue destination="IJF-NZ-auS" kind="relationship" relationship="viewControllers" id="zex-L9-tqm"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ozz-dt-9Wd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-290" y="166"/>
+        </scene>
+        <!--Music-->
+        <scene sceneID="WZH-E1-5vO">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SJ2-pS-RxL" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Music" id="AYo-G4-qzf"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="N6B-di-vzx">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="f4o-Ei-M0t" kind="relationship" relationship="rootViewController" id="R5O-sD-f19"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ztz-s0-mOG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="941.60000000000002" y="-153.37331334332833"/>
+        </scene>
+    </scenes>
+</document>
