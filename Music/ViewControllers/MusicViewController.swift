@@ -18,6 +18,7 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var playerItem: AVPlayerItem? = nil
     var currentSong = -1
     var currentTime: Double = 0
+    var isPlaying = false
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -43,6 +44,24 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         setupNowPlayingInfoCenter()
     }
     
+//    override func remoteControlReceived(with event: UIEvent?) {
+//        if (event?.type == .remoteControl) {
+//            let subtype = (event?.subtype)!
+//
+//            switch subtype {
+//            case .remoteControlPlay:
+//                self.player?.play()
+//                self.setupNowPlaying()
+//            case .remoteControlPause:
+//                self.player?.pause()
+//            case .remoteControlTogglePlayPause:
+//                self.player?.pause()
+//            default:
+//                break
+//            }
+//        }
+//    }
+    
     func setupNowPlaying() {
         // Define Now Playing Info
         var nowPlayingInfo = [String : Any]()
@@ -62,11 +81,30 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         MPRemoteCommandCenter.shared().playCommand.addTarget {event in
             self.player?.play()
             self.setupNowPlaying()
+            self.isPlaying = true
+            
             return .success
         }
         MPRemoteCommandCenter.shared().pauseCommand.isEnabled = true
         MPRemoteCommandCenter.shared().pauseCommand.addTarget {event in
             self.player?.pause()
+            self.isPlaying = false
+            
+            return .success
+        }
+        
+        MPRemoteCommandCenter.shared().togglePlayPauseCommand.isEnabled = true
+        MPRemoteCommandCenter.shared().togglePlayPauseCommand.addTarget {event in
+            if self.isPlaying {
+                self.player?.pause()
+                self.setupNowPlaying()
+                self.isPlaying = false
+            } else {
+                self.player?.play()
+                self.setupNowPlaying()
+                self.isPlaying = true
+            }
+            
             return .success
         }
         
@@ -100,12 +138,15 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
             player = AVPlayer(playerItem: playerItem)
             player?.play()
             setupNowPlaying()
+            self.isPlaying = true
         } else {
             if player?.rate == 0.0  {
                 player?.play()
                 setupNowPlaying()
+                self.isPlaying = true
             } else {
                 player?.pause()
+                self.isPlaying = false
             }
         }
         
