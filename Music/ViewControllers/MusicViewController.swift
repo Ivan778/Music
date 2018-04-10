@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import  MediaPlayer
 
 class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
@@ -21,6 +22,60 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         setNavigationController()
         setTableView()
+        
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.playCommand.isEnabled = true
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Audio session error")
+        }
+        
+        updateNowPlayingInfoCenter()
+        setupNowPlayingInfoCenter()
+    }
+    
+    func updateNowPlayingInfoCenter() {
+        if currentSong == -1 {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
+            return
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+            MPMediaItemPropertyTitle: "Song",
+            MPMediaItemPropertyAlbumTitle: "Album",
+            MPMediaItemPropertyArtist: "Artist",
+            MPMediaItemPropertyPlaybackDuration: player!.duration
+        ]
+    }
+    
+    func setupNowPlayingInfoCenter() {
+        MPRemoteCommandCenter.shared().playCommand.addTarget {event in
+            if self.currentSong != -1 {
+                self.player?.play()
+            }
+            return .success
+        }
+        
+        MPRemoteCommandCenter.shared().pauseCommand.addTarget {event in
+            if self.currentSong != -1 {
+                self.player?.pause()
+            }
+            return .success
+        }
+        
+//        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget {event in
+//
+//        }
+//
+//        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget {event in
+//
+//        }
     }
     
     // MARK: - TableView delegate methods
