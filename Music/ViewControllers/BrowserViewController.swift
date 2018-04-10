@@ -8,36 +8,43 @@
 
 import UIKit
 import WebKit
+import SafariServices
 
-class BrowserViewController: UIViewController, WKNavigationDelegate, UISearchBarDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+class BrowserViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UISearchBarDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var progressView: UIProgressView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        let url = URL(string: "http://google.com")!
+//        let browser = SFSafariViewController(url: url)
+//        self.present(browser, animated: true, completion: nil)
 
         let url = URL(string: "http://google.com")!
         webView.load(URLRequest(url: url))
-        
+
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.scrollView.delegate = self
-        
+
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
         webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, -49, 0)
         webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -49, 0)
-        
+        webView.allowsBackForwardNavigationGestures = true
+
         searchBar.delegate = self
         searchBar.autocapitalizationType = UITextAutocapitalizationType.none
         (searchBar.value(forKey: "searchField") as! UITextField).textAlignment = .center
         (searchBar.value(forKey: "_searchField") as! UITextField).clearButtonMode = .whileEditing
-        
+
         progressView.alpha = 0.0
         progressView.progress = 0.0
-        
+
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPress(longPressGestureRecognizer:)))
         webView.isUserInteractionEnabled = true
-        
+
         webView.addGestureRecognizer(longPressRecognizer)
     }
     

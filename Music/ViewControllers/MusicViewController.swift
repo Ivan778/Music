@@ -8,13 +8,16 @@
 
 import UIKit
 import AVFoundation
-import  MediaPlayer
+import MediaPlayer
+import SafariServices
 
-class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioPlayerDelegate {
     @IBOutlet weak var tableView: UITableView!
     var content = [String]()
-    var player: AVAudioPlayer? = nil
+    var player: AVPlayer? = nil
+    var playerItem: AVPlayerItem? = nil
     var currentSong = -1
+    var currentTime: Double = 0
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -36,46 +39,43 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
             print("Audio session error")
         }
         
-        updateNowPlayingInfoCenter()
+        setupNowPlaying()
         setupNowPlayingInfoCenter()
     }
     
-    func updateNowPlayingInfoCenter() {
-        if currentSong == -1 {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
-            return
-        }
+    func setupNowPlaying() {
+        // Define Now Playing Info
+        var nowPlayingInfo = [String : Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = "My Movie"
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem?.currentTime().seconds
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem?.asset.duration.seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player?.rate
         
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-            MPMediaItemPropertyTitle: "Song",
-            MPMediaItemPropertyAlbumTitle: "Album",
-            MPMediaItemPropertyArtist: "Artist",
-            MPMediaItemPropertyPlaybackDuration: player!.duration
-        ]
+        // Set the metadata
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     func setupNowPlayingInfoCenter() {
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
+        MPRemoteCommandCenter.shared().playCommand.isEnabled = true
         MPRemoteCommandCenter.shared().playCommand.addTarget {event in
-            if self.currentSong != -1 {
-                self.player?.play()
-            }
+            self.player?.play()
+            self.setupNowPlaying()
             return .success
         }
-        
+        MPRemoteCommandCenter.shared().pauseCommand.isEnabled = true
         MPRemoteCommandCenter.shared().pauseCommand.addTarget {event in
-            if self.currentSong != -1 {
-                self.player?.pause()
-            }
+            self.player?.pause()
             return .success
         }
         
-//        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget {event in
-//
-//        }
-//
-//        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget {event in
-//
-//        }
+        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.isEnabled = true
+        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget(handler: {event in
+            let time = (event as! MPChangePlaybackPositionCommandEvent).positionTime
+            self.playerItem?.seek(to: CMTimeMakeWithSeconds(time, 1000000), completionHandler: nil)
+            return .success
+        })
     }
     
     // MARK: - TableView delegate methods
@@ -92,27 +92,21 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if player == nil || currentSong != indexPath.row {
             currentSong = indexPath.row
-            do {
-                let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                let url = documentsDirectoryURL.appendingPathComponent(content[indexPath.row])
-                
-                self.player = try AVAudioPlayer(contentsOf: url)
-                player?.prepareToPlay()
-                player?.volume = 1.0
-                player?.play()
-            } catch let error as NSError {
-                self.player = nil
-                print(error.localizedDescription)
-            } catch {
-                print("AVAudioPlayer init failed")
-            }
-        } else {
-            if (player?.isPlaying)! {
-                player?.pause()
-            } else {
-                player?.play()
-            }
             
+            let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let url = documentsDirectoryURL.appendingPathComponent(content[indexPath.row])
+            
+            playerItem = AVPlayerItem(url: url)
+            player = AVPlayer(playerItem: playerItem)
+            player?.play()
+            setupNowPlaying()
+        } else {
+            if player?.rate == 0.0  {
+                player?.play()
+                setupNowPlaying()
+            } else {
+                player?.pause()
+            }
         }
         
         
