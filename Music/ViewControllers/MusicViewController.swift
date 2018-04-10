@@ -88,6 +88,7 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         MPRemoteCommandCenter.shared().pauseCommand.isEnabled = true
         MPRemoteCommandCenter.shared().pauseCommand.addTarget {event in
             self.player?.pause()
+            self.setupNowPlaying()
             self.isPlaying = false
             
             return .success
@@ -146,6 +147,7 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.isPlaying = true
             } else {
                 player?.pause()
+                self.setupNowPlaying()
                 self.isPlaying = false
             }
         }
