@@ -19,6 +19,8 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var currentSong = -1
     var currentTime: Double = 0
     var isPlaying = false
+    var songArtist = "Artist"
+    var songTitle = "Title"
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -65,7 +67,8 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func setupNowPlaying() {
         // Define Now Playing Info
         var nowPlayingInfo = [String : Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = "My Movie"
+        nowPlayingInfo[MPMediaItemPropertyArtist] = songArtist
+        nowPlayingInfo[MPMediaItemPropertyTitle] = songTitle
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem?.currentTime().seconds
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem?.asset.duration.seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player?.rate
@@ -113,6 +116,8 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget(handler: {event in
             let time = (event as! MPChangePlaybackPositionCommandEvent).positionTime
             self.playerItem?.seek(to: CMTimeMakeWithSeconds(time, 1000000), completionHandler: nil)
+            self.setupNowPlaying()
+            
             return .success
         })
     }
@@ -135,6 +140,15 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let url = documentsDirectoryURL.appendingPathComponent(content[indexPath.row])
             
+            let asset = AVURLAsset(url: url)
+            if asset.commonMetadata.count > 0 {
+                print(asset.commonMetadata.count)
+                let metas = asset.commonMetadata
+                print("\(metas[metas.count - 1].stringValue!) - \(metas[0].stringValue!)")
+                songArtist = metas[metas.count - 1].stringValue!
+                songTitle = metas[0].stringValue!
+            }
+            
             playerItem = AVPlayerItem(url: url)
             player = AVPlayer(playerItem: playerItem)
             player?.play()
@@ -154,6 +168,25 @@ class MusicViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
+            do {
+                let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let url = documentsDirectoryURL.appendingPathComponent(content[indexPath.row])
+                
+                try FileManager.default.removeItem(at: url)
+                content.remove(at: indexPath.row)
+                tableView.reloadData()
+            } catch {
+                print("Can't remove file!")
+            }
+        }
     }
     
     // Setting view
